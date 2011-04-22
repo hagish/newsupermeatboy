@@ -50,7 +50,15 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Code\HelloWorld.cs" />
+     <Compile Include="Assets\Code\Behaviour\Chainsaw.cs" />
+     <Compile Include="Assets\Code\Behaviour\HelloWorld.cs" />
+     <Compile Include="Assets\Code\Behaviour\MainCharacter.cs" />
+     <Compile Include="Assets\Code\Lib\DebugHelper.cs" />
+     <Compile Include="Assets\Code\Lib\FiniteStateMachine.cs" />
+     <Compile Include="Assets\Code\Lib\GameObjectHelper.cs" />
+     <Compile Include="Assets\Code\Lib\MathHelper.cs" />
+     <Compile Include="Assets\Code\Lib\Profile.cs" />
+     <Compile Include="Assets\Code\Lib\Shape.cs" />
      <None Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\CharacterMotor.js" />
      <None Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\FPSInputController.js" />
      <Compile Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\MouseLook.cs" />
