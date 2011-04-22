@@ -18,6 +18,15 @@ public class PlayerLocal : Player {
 		transform.position = GameObject.Find("SpawnPoint").transform.position;
 	}
 	
+	/*
+	void OnCollisionEnter(Collision collision) {
+		foreach (ContactPoint contact in collision.contacts) {
+		//	Debug.DrawRay(contact.point, contact.normal, Color.white);
+		}
+		//if (collision.relativeVelocity.magnitude > 2)
+	}
+	*/
+
 public float speed = 6.0F;
 public float jumpSpeed = 8.0F;
 public float gravity = 20.0F;
