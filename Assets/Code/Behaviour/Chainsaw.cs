@@ -10,6 +10,7 @@ public class Chainsaw : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		Quaternion rotation = Quaternion.AngleAxis(3f, Vector3.forward);
+		transform.rotation *= rotation;
 	}
 }
