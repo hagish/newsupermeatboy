@@ -9,7 +9,7 @@ public class MainCharacter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		transform.position = GameObject.Find("SpawnPoint").transform.position;
 	}
 	
 	// Update is called once per frame
