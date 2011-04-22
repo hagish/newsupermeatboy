@@ -18,8 +18,8 @@ public class CameraSmoothFollow : MonoBehaviour {
 			
 		// out of visible 
 		if (
-		    viewPos.x < 0.0f + border || viewPos.x > 1.0f - border || 
-		    viewPos.y < 0.0f + border || viewPos.y > 1.0f - border
+		    viewPos.x < 0.4f + border || viewPos.x > 0.6f - border ||
+		    viewPos.y < 0.4f + border || viewPos.y > 0.6f - border
 		)
 		{
 			Vector3 fromTargetToCam = target.transform.position - transform.position;
