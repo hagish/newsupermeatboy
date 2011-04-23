@@ -4,14 +4,35 @@ using System.Collections;
 public class BaseBullet : MonoBehaviour
 {
 	//a bullet has a speed
-	private float _flightSpeed = 4.0f;
+	private float _flightSpeed = 8.0f;
 	
-	//Target
-	public Vector3 TargetPositon;
+	// //Target
+	// private Player _target = null;
+	// public Player Target
+	// {
+		// get { return _target; }
+		// set
+		// {
+			// FlightVector = new Vector3(value.transform.position.x - transform.position.x, value.transform.position.y - transform.position.y, value.transform.position.z);
+			// _target = value;
+		// }
+	// }
+	
+	private Vector3 _flightVector;
+	
+	public Vector3 FlightVector
+	{
+		get { return _flightVector; }
+		set { _flightVector = new Vector3(value.x - transform.position.x, value.y - transform.position.y, value.z); }
+	}
 	
 	//flying distance
-	private float _flightDistance = 18.0f;
+	private float _flightDistance = 12.0f;
 	private float _flown = 0.0f;
+	
+	public float HitRadius = 0.25f;
+	
+	public GameObject Parent;
 	
 	// Use this for initialization
 	void Start()
@@ -27,11 +48,13 @@ public class BaseBullet : MonoBehaviour
 	
 	void OnTriggerEnter(Collider otherObject)
 	{
-		var value = otherObject.gameObject.GetComponent<Player>();
-		
-		if(value != null)
+		if(otherObject.transform.parent.gameObject != Parent)
 		{
-			value.gameObject.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
+			var value = otherObject.gameObject.GetComponent<Player>();
+			if(value != null)
+			{
+				Kill(value);
+			}
 			Destroy(gameObject);
 		}
 	}
@@ -46,8 +69,13 @@ public class BaseBullet : MonoBehaviour
 		}
 		else
 		{
-			transform.position = Vector3.MoveTowards(transform.position, TargetPositon, _flightSpeed * Time.deltaTime);
+			transform.position = Vector3.MoveTowards(transform.position, transform.position + FlightVector, _flightSpeed * Time.deltaTime);
 		}
+	}
+	
+	private void Kill(Player target)
+	{
+		target.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
 	}
 }
 
