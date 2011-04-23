@@ -8,13 +8,25 @@ keys	http://unity3d.com/support/documentation/ScriptReference/Input.GetKey.html
 phys	http://unity3d.com/support/documentation/Components/comp-DynamicsGroup.html
 	rigid	http://unity3d.com/support/documentation/Components/class-Rigidbody.html
 	char	http://unity3d.com/support/documentation/Components/class-CharacterController.html
+mat		http://unity3d.com/support/documentation/ScriptReference/Material.html
 printf : Debug.Log
+
+spawn stuff :
+		GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Bullet", true, transform.position, transform.rotation);
+		obj.GetComponent<BaseBullet>().TargetPositon = Target.transform.posit
+		
+		GameObject p = new GameObject("Player");
+		p.AddComponent<Player>();
+
+send messages
+		other.gameObject.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
 */
 
 public class PlayerLocal : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+	
 	}
 	
 	bool	bTouchesWall = false;
@@ -53,6 +65,7 @@ public class PlayerLocal : MonoBehaviour {
 		bTouchesWallLeft = false;
 		bTouchesWallRight = false;
 		iTouchesWallXNormal = 0;
+		
 	}
 	void OnControllerColliderHit(ControllerColliderHit hit) {
 		//Debug.Log("mainchar:OnControllerColliderHit");
@@ -70,6 +83,25 @@ public class PlayerLocal : MonoBehaviour {
 			if (hit.moveDirection.x < 0f) { iTouchesWallXNormal =  1; bTouchesWallLeft = true; }
 			if (hit.moveDirection.x > 0f) { iTouchesWallXNormal = -1; bTouchesWallRight = true; }
 		}
+		
+		// blood test 1
+		GameObject o = hit.gameObject;
+		// if (o) o.renderer.material.color = Color.red;
+
+		// blood test 2
+		//GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Sphere", true, transform.position+hit.moveDirection, transform.rotation);
+		//obj.renderer.material.color = Color.red;
+		//GameObject p = new GameObject("WallBlood");
+		Object ob = Resources.Load("BloodBall");
+		if (ob == null) {
+			Debug.LogError("failed to load prefab");
+		} else {
+			GameObject p = (GameObject)ob;
+			if (!p) Debug.LogError("PARTIAL : failed to load prefab as GameObject");
+		}
+		// p.AddComponent<MeshFilter>();
+		// p.AddComponent<MeshRenderer>();
+		//p.transform.position = transform.position;
 	}
 	
 	// never called 
