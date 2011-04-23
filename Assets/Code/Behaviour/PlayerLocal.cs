@@ -23,10 +23,12 @@ send messages
 */
 
 public class PlayerLocal : MonoBehaviour {
-
+	
+	private Player player;
+	
 	// Use this for initialization
 	void Start () {
-	
+		player = GetComponent<Player>();
 	}
 	
 	public static Object prefab_bloodball; 
@@ -259,5 +261,19 @@ float	ChangeValueWithSpeed	(float old,float target,float change_speed) {
 		
 		if (bTouchesWallLeft) bSlidingLeft = true;
 		if (bTouchesWallRight) bSlidingRight = true;
+		
+		
+		// animation handling
+		if (bSlidingLeft) {
+			player.playAnimation("slide_l", false);
+		} else if (bSlidingRight) {
+			player.playAnimation("slide_r", false);
+		} else if (!controller.isGrounded) {
+			player.playDirectedAnimation("jump", false);
+		} else if (	moveSpeed.sqrMagnitude > 0.01f ){
+			player.playDirectedAnimation("run", true);
+		} else {
+			player.playDirectedAnimation("idle", true);	
+		}
 	}
 }

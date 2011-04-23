@@ -41,15 +41,17 @@ public class MovementDirection : MonoBehaviour {
 	{
 		// detect last movement direction
 		Vector3 direction = transform.position - lastOtherPosition;
-		if ( Vector3.Dot(direction, Vector3.right) > 0 )
+		if (direction.sqrMagnitude > 0.01f)
 		{
-			lastDirection = MovementDirection.Direction.RIGHT;	
+			if ( Vector3.Dot(direction, Vector3.right) > 0 )
+			{
+				lastDirection = MovementDirection.Direction.RIGHT;	
+			}
+			else
+			{
+				lastDirection = MovementDirection.Direction.LEFT;	
+			}
 		}
-		else
-		{
-			lastDirection = MovementDirection.Direction.LEFT;	
-		}
-		
 		
 		positionChanged = false;
 		// position changed?

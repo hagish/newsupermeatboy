@@ -24,7 +24,7 @@ public class Player : MonoBehaviour {
 	
 	void Idle()
 	{
-		// playDirectedAnimation("idle");
+		playDirectedAnimation("idle", true);
 	}
 	
 	private string movementPostfix()
@@ -39,14 +39,27 @@ public class Player : MonoBehaviour {
 		}
 	}
 	
-	public void playDirectedAnimation(string name)
+	public void playAnimation(string name, bool looped)
 	{
-		anim.CrossFade(name + movementPostfix());
+		anim.CrossFade(name);
+		
+		if (looped)
+		{
+			anim.wrapMode = WrapMode.Loop;
+		}
+		else
+		{
+			anim.wrapMode = WrapMode.Once;
+		}
+	}
+	
+	public void playDirectedAnimation(string name, bool looped)
+	{
+		playAnimation(name + movementPostfix(), looped);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		playDirectedAnimation("run");
 		if (this.transform.position.y < deepHole) Die();
 	}
 	
