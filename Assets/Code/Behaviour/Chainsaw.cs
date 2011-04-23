@@ -7,12 +7,6 @@ public class Chainsaw : MonoBehaviour {
 	
 	private Vector3 startPos;
 	
-	private bool isNetworkStub = false;
-
-	void OnNetworkInstantiate(NetworkMessageInfo info) {
-		isNetworkStub = true;
-	}
-	
 	// Use this for initialization
 	void Start () {
 
@@ -22,7 +16,7 @@ public class Chainsaw : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (isNetworkStub)return;
+		if (!NetworkHelper.isServer())return;
 		
 		// Check if deltaPos has values and then apply interpolation
         transform.position = Vector3.Lerp(startPos, startPos + deltaPos, Mathf.PingPong(Time.time * speed, 1));
@@ -34,6 +28,6 @@ public class Chainsaw : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		other.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
+		other.gameObject.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
 	}
 }

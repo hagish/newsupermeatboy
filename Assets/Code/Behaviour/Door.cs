@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class HelloWorld : MonoBehaviour {
+public class Door : MonoBehaviour {
+	public GameObject key;
 
 	// Use this for initialization
 	void Start () {
@@ -10,6 +11,6 @@ public class HelloWorld : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log("lala");
+	
 	}
 }
