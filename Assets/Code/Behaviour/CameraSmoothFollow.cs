@@ -2,11 +2,24 @@ using UnityEngine;
 using System.Collections;
 
 public class CameraSmoothFollow : MonoBehaviour {
-	public GameObject target;
+	private GameObject player1;
+	private GameObject player2;
 	
 	// Use this for initialization
 	void Start () {
 	
+	}
+	
+	public void setTarget(int playerNr, GameObject target)
+	{
+		if (playerNr == 1)
+		{
+			player1 = target;	
+		}
+		if (playerNr == 2)
+		{
+			player2 = target;	
+		}
 	}
 	
 	// Update is called once per frame
@@ -30,12 +43,25 @@ public class CameraSmoothFollow : MonoBehaviour {
 			fromTargetToCam.z = 0.0f;
 			
 			transform.position += fromTargetToCam;
-		}	
+		}
 		*/
+		
+		Vector3 pos = player1.transform.position;
+		
+		float z = transform.position.z;
+		
+		if (player2 != null)
+		{
+			pos += player2.transform.position;
+			pos *= 0.5f;
+			
+			z = -10 - (player1.transform.position - player2.transform.position).magnitude * 0.5f;
+		}
+		
 		float f = 0.04f;
 		float fi = 1f - f;
-			Vector3 newcampos = fi* transform.position + f* target.transform.position;
-			newcampos.z = transform.position.z;
+			Vector3 newcampos = fi* transform.position + f* pos;
+			newcampos.z = z;
 			transform.position = newcampos;
 	}
 }

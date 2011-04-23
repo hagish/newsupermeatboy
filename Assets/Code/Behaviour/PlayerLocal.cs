@@ -64,7 +64,18 @@ public class PlayerLocal : MonoBehaviour {
 
 	float time_since_jump = 0f;
 	public static float time_since_jump_airmove_slower = 0.1f; // airmove ineffective shortly after jump
-
+	
+	public string keyLeft = "left";
+	public string keyRight = "right";
+	public string keyJump = "space";
+	
+	public void setKeyBindings(string left, string right, string jump)
+	{
+		this.keyLeft = left;	
+		this.keyRight = right;
+		this.keyJump = jump;
+	}
+	
 	static bool BoundsContainedIn (Bounds inner,Bounds outer) {
 		return	inner.min.x >= outer.min.x &&
 				inner.min.y >= outer.min.y &&
@@ -179,9 +190,9 @@ float	ChangeValueWithSpeed	(float old,float target,float change_speed) {
 	// Update is called once per frame
 	void Update () {
 		CharacterController controller = GetComponent<CharacterController>();
-		bool bJump = Input.GetKey("w") || Input.GetKey("up") || Input.GetKey("space");
-		bool bLeft = Input.GetKey("a") || Input.GetKey("left");
-		bool bRight = Input.GetKey("d") || Input.GetKey("right");
+		bool bJump = Input.GetKey(keyJump);
+		bool bLeft = Input.GetKey(keyLeft);
+		bool bRight = Input.GetKey(keyRight);
 		if (!bLeft) bLeftPressKnown = false;
 		if (!bRight) bRightPressKnown = false;
 		if ((bLeft && !bLeftPressKnown) || (bRight && !bRightPressKnown)) bDirKeyPressedSinceJump = true;

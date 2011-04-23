@@ -5,8 +5,10 @@ public class Player : MonoBehaviour {
 	private Animation anim;
 	private float deepHole = 0.0f;
 	
+	
 	// PlayerLocals writes into this
 	public bool onGround = true;
+	public int playerNr = 0;
 	
 	// Use this for initialization
 	void Start () {
@@ -68,7 +70,7 @@ public class Player : MonoBehaviour {
 	}
 	
 	void Respawn () {
-		transform.position = GameObject.Find("SpawnPoint").transform.position;
+		transform.position = Game.game.findSpawnPosition(playerNr);
 		
 		PlayerLocal local = GetComponent<PlayerLocal>();
 		

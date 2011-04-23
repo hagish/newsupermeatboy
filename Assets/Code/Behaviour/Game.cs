@@ -3,15 +3,29 @@ using System.Collections;
 
 public class Game : MonoBehaviour {
 	public static Game game;
-
+	
+	public Vector3 findSpawnPosition(int playerNr)
+	{
+		if (GameObject.Find("SpawnPoint" + playerNr) != null) return GameObject.Find("SpawnPoint" + playerNr).transform.position;
+		if (GameObject.Find("SpawnPoint") != null) return GameObject.Find("SpawnPoint").transform.position;
+		return Vector3.zero;
+	}
+	
 	// Use this for initialization
 	void Start () {
 		game = this;
 		
-		Vector3 position = GameObject.Find("SpawnPoint").transform.position;
+		createLocalPlayer(1, "left", "right", "space");
+		createLocalPlayer(2, "a", "d", "w");
+	}
+	
+	private void createLocalPlayer(int playerNr, string keyLeft, string keyRight, string keyJump)
+	{
+		Vector3 position = findSpawnPosition(playerNr);
 		GameObject player = GameObjectHelper.createObject(gameObject, "Player", true, position, Quaternion.identity);
-		GameObject.Find("Camera").GetComponent<CameraSmoothFollow>().target = player;
-		player.AddComponent<PlayerLocal>();
+		GameObject.Find("Camera").GetComponent<CameraSmoothFollow>().setTarget(playerNr, player);
+		player.AddComponent<PlayerLocal>().setKeyBindings(keyLeft, keyRight, keyJump);
+		player.GetComponent<Player>().playerNr = playerNr;
 	}
 	
 	// Update is called once per frame
