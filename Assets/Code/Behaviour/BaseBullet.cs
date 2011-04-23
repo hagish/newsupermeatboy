@@ -34,7 +34,7 @@ public class BaseBullet : MonoBehaviour
 	void OnCollisionEnter(Collision otherObject)
 	{
 		Debug.Log("OnCollisionEnter Bullet");
-		if(otherObject.gameObject is Player)
+		if(otherObject.gameObject.GetType() == typeof(Player))
 		{
 			Debug.Log("Player has been hit");
 			DestroyImmediate(gameObject);

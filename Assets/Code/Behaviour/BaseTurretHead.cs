@@ -79,7 +79,7 @@ public class BaseTurretHead : MonoBehaviour
 		}
 	}
 	
-	private bool IsPlayerStillInRange()
+	private bool IsPlayerOutOfRange()
 	{
 		float distance = Vector3.Distance(transform.position, Target.transform.position);
 		if( distance <= AttackRange)
