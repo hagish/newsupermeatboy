@@ -7,7 +7,7 @@ public class BaseTurretHead : MonoBehaviour
 	private float TimeTillNextShot = 0.0f;
 	
 	//the turret checks if there is any player in its range
-	private float AttackRange = 10.0f;
+	private float AttackRange = 30.0f;
 	
 	//if the turret has found a player it follows the player
 	private Player _target = null;
@@ -19,7 +19,7 @@ public class BaseTurretHead : MonoBehaviour
 	}
 	
 	//the turret fires all 'value' seconds a bullet
-	public int AttackSpeed = 5;
+	public int AttackSpeed = 3;
 	
 	private Vector3 _spawnPoint;
 	
@@ -37,11 +37,7 @@ public class BaseTurretHead : MonoBehaviour
 			CheckForPlayersInRange();
 		else
 		{
-			if(IsPlayerStillInRange())
-			{
-				
-			}
-			else
+			if(IsPlayerOutOfRange())
 			{
 				//the player is out of range, so we have no target
 				Target = null;
@@ -81,13 +77,13 @@ public class BaseTurretHead : MonoBehaviour
 		}
 	}
 	
-	private bool IsPlayerStillInRange()
+	private bool IsPlayerOutOfRange()
 	{
 		float distance = Vector3.Distance(transform.position, Target.transform.position);
 		if( distance <= AttackRange)
-			return true;
+			return false;
 		
-		return false;
+		return true;
 	}
 	
 	private void RotateHead()
@@ -119,6 +115,8 @@ public class BaseTurretHead : MonoBehaviour
 		obj.transform.rotation = transform.rotation;
 		obj.transform.Rotate(90.0f, 0.0f, 0.0f);
 		obj.transform.localScale = new Vector3(0.25f,0.25f,0.25f);
+		obj.name = "Bullet";
+		obj.collider.isTrigger = true;
 		BaseBullet bullet = obj.AddComponent<BaseBullet>();
 		bullet.TargetPositon = Target.transform.position;
 		

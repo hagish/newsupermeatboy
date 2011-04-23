@@ -10,34 +10,53 @@ public class BaseBullet : MonoBehaviour
 	public Vector3 TargetPositon;
 	
 	//flying distance
-	private float _flightDistance = 3.0f;
+	private float _flightDistance = 18.0f;
 	private float _flown = 0.0f;
 	
-	private bool _died = false;
-
 	// Use this for initialization
 	void Start()
 	{
-		Debug.Log("I have been created");
 		
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-		if( _died == false )
+		//Check if a player has been hit
+		if(CollisionCheck() == false)
+			Fly();
+		else
 		{
-			float distance = Time.deltaTime * _flightSpeed;
-			_flown += distance;
-			if( _flown >= _flightDistance)
-			{
-				Destroy(gameObject, 2.0f);
-				_died = true;
-			}
-			else
-			{
-				transform.position = Vector3.MoveTowards(transform.position, TargetPositon, _flightSpeed * Time.deltaTime);
-			}
+			
+		}
+	}
+	
+	void OnCollisionEnter(Collision collision)
+	{
+		
+		if( collision.gameObject is Player)
+			Debug.Log("Hit");
+	}
+
+	
+	private bool CollisionCheck()
+	{
+		
+		
+		return false;
+	}
+	
+	private void Fly()
+	{
+		float distance = Time.deltaTime * _flightSpeed;
+		_flown += distance;
+		if( _flown >= _flightDistance)
+		{
+			Destroy(gameObject, 2.0f);
+		}
+		else
+		{
+			transform.position = Vector3.MoveTowards(transform.position, TargetPositon, _flightSpeed * Time.deltaTime);
 		}
 	}
 }
