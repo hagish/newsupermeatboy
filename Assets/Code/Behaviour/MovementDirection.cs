@@ -4,7 +4,7 @@ using System.Collections;
 public class MovementDirection : MonoBehaviour {
 	private Vector3 lastOtherPosition;
 	private float lastOtherPositionTime;
-	private float lastOtherSqrDistanceTreshold = 1.0f;
+	private float lastOtherSqrDistanceTreshold = 0.1f;
 	private float lastOtherTimeout = 1.0f;
 	private bool positionChanged = false;
 	
