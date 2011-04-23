@@ -29,6 +29,8 @@ public class PlayerLocal : MonoBehaviour {
 	
 	}
 	
+	public static Object prefab_bloodball; 
+	
 	bool	bTouchesWall = false;
 	bool	bTouchesWallLeft = false;
 	bool	bTouchesWallRight = false;
@@ -54,6 +56,9 @@ public class PlayerLocal : MonoBehaviour {
 	bool bLeftPressKnown = false;
 	bool bRightPressKnown = false;
 	bool bDirKeyPressedSinceJump = false;
+	float nextbloodt = 0f;
+	float fBloodInterval = 1f/30f;
+	Vector3 vLastBloodPos;
 
 	float time_since_jump = 0f;
 	public static float time_since_jump_airmove_slower = 0.1f; // airmove ineffective shortly after jump
@@ -89,19 +94,33 @@ public class PlayerLocal : MonoBehaviour {
 		// if (o) o.renderer.material.color = Color.red;
 
 		// blood test 2
-		//GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Sphere", true, transform.position+hit.moveDirection, transform.rotation);
-		//obj.renderer.material.color = Color.red;
-		//GameObject p = new GameObject("WallBlood");
-		Object ob = Resources.Load("BloodBall");
-		if (ob == null) {
-			Debug.LogError("failed to load prefab");
-		} else {
-			GameObject p = (GameObject)ob;
-			if (!p) Debug.LogError("PARTIAL : failed to load prefab as GameObject");
+		if (Time.time > nextbloodt) {
+			nextbloodt = Time.time + fBloodInterval;
+			float dx = hit.moveDirection.x;
+			float dy = hit.moveDirection.y;
+			float fMinOrtho = 0.8f;
+			if (Mathf.Abs(dx) > fMinOrtho || Mathf.Abs(dy) > fMinOrtho) {
+				//GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Sphere", true, transform.position+hit.moveDirection, transform.rotation);
+				//obj.renderer.material.color = Color.red;
+				//GameObject p = new GameObject("WallBlood");
+				var res = Resources.Load("BloodBall");
+				if (res) {
+					GameObject g = (GameObject)GameObject.Instantiate(res);
+					// p.AddComponent<MeshFilter>();
+					// p.AddComponent<MeshRenderer>();
+					
+					g.transform.position = hit.point;
+					Vector3 forward = hit.normal;
+					Vector3 up = Vector3.Cross(forward,Vector3.forward);
+					// g.transform.rotation = transform.rotation;
+					g.transform.rotation = Quaternion.LookRotation(forward,up);
+					
+					// g.transform.parent = transform;
+					
+					// Debug.Log(p.transform.position);
+				}
+			}
 		}
-		// p.AddComponent<MeshFilter>();
-		// p.AddComponent<MeshRenderer>();
-		//p.transform.position = transform.position;
 	}
 	
 	// never called 
