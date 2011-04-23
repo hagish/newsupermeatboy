@@ -25,4 +25,8 @@ public class Chainsaw : MonoBehaviour {
 		//transform.rotation *= rotation; 
 		
 	}
+	
+	void OnTriggerEnter(Collider other) {
+		other.SendMessage("Die");
+	}
 }
