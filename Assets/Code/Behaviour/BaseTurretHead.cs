@@ -7,12 +7,12 @@ public class BaseTurretHead : MonoBehaviour
 	private float TimeTillNextShot = 0.0f;
 	
 	//the turret checks if there is any player in its range
-	private float AttackRange = 30.0f;
+	private float AttackRange = 10.0f;
 	
 	//if the turret has found a player it follows the player
-	private MainCharacter _target = null;
+	private Player _target = null;
 	
-	public MainCharacter Target
+	public Player Target
 	{
 		get { return _target; }
 		set { _target = value; }
@@ -32,6 +32,7 @@ public class BaseTurretHead : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		//RotateHead();
 		if(Target == null)
 			CheckForPlayersInRange();
 		else
@@ -58,21 +59,24 @@ public class BaseTurretHead : MonoBehaviour
 	
 	private void CheckForPlayersInRange()
 	{
-		MainCharacter[] players = Game.game.GetComponentsInChildren<MainCharacter>();
+		Player[] players = Game.game.GetComponentsInChildren<Player>();
 			
 		if(players.Length == 0)
 			return; // as no player has been found
 		
 		foreach(var item in players)
 		{
-			//calculate distance
-			float distance = Vector3.Distance(transform.position, item.transform.position);
-			
-			if(distance <= AttackRange)
+			if(item is Player)
 			{
-				//there is a player in range
-				Target = item;
-				break;
+				//calculate distance
+				float distance = Vector3.Distance(transform.position, item.transform.position);
+				
+				if(distance <= AttackRange)
+				{
+					//there is a player in range
+					Target = item;
+					break;
+				}
 			}
 		}
 	}
@@ -90,8 +94,9 @@ public class BaseTurretHead : MonoBehaviour
 	{
 		//i need current position of the target, and my own position
 		//next i have to calculate the 
-		Ray r = new Ray(transform.position, transform.rotation);
-		Debug.Log(r);
+		transform.LookAt(Target.transform.position);
+		//transform.Rotate(90.0f, 0.0f, 0.0f);
+		//transform.Rotate(0.0f, 0.0f, 2.0f);
 	}
 	
 	private bool ReadyToFire()
