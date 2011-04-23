@@ -25,20 +25,6 @@ public class BaseBullet : MonoBehaviour
 		Fly();
 	}
 	
-	void OnCollisionEnter(Collision otherObject)
-	{
-	    /*var value = otherObject.gameObject.GetComponent<Player>();
-		
-		if(value != null)
-		{
-			value.gameObject.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
-		}
-		
-		if(otherObject.gameObject.GetComponent<BaseBullet>() == null)
-		{
-		}*/
-	}
-	
 	void OnTriggerEnter(Collider otherObject)
 	{
 		var value = otherObject.gameObject.GetComponent<Player>();
