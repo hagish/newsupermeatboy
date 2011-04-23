@@ -94,19 +94,21 @@ public class PlayerLocal : MonoBehaviour {
 			Vector3 pos = hit_point;
 			Vector3 forward = hit_normal;
 			Vector3 up = Vector3.Cross(forward,Vector3.forward);
-			Quaternion rot = Quaternion.LookRotation(forward,up);
+			Quaternion rot = Quaternion.LookRotation(up, forward);
 			
 			g.transform.position = pos;
 			g.transform.rotation = rot;
 			
+			/*
 			// check boundingbox to avoid misplaced blobs at edges
 			Bounds b1 = hit.collider.bounds;
-			Bounds b2 = g.renderer.bounds;
+			Bounds b2 = g.GetComponentInChildren<MeshRenderer>().bounds;
 			float e = 4f*Mathf.Min(Mathf.Min(b2.extents.x,b2.extents.y),b2.extents.z);
 			b1.Expand(new Vector3(e,e,e));
 			if (!BoundsContainedIn(b2,b1)) {
 				GameObject.Destroy(g);
 			}
+			*/
 			
 			// p.AddComponent<MeshFilter>();
 			// p.AddComponent<MeshRenderer>();
