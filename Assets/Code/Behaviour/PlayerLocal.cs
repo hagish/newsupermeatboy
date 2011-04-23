@@ -72,6 +72,28 @@ public class PlayerLocal : MonoBehaviour {
 		Physics.gravity = new Vector3(0f, -40f, 0f);
 	}
 	
+	static float bumpkill_dist = 1.2f;
+	void	JumpAndBumpKillCheck () {
+		Player myplayer = GetComponent<Player>();
+		Player otherplayer = (Player.playerA == myplayer) ? Player.playerB : Player.playerA;
+		if (!myplayer) { Debug.Log("JumpAndBumpKillCheck no myplayer"); return; }
+		if (!otherplayer) { Debug.Log("JumpAndBumpKillCheck no otherplayer"); return; }
+		Vector3 v = otherplayer.transform.position - myplayer.transform.position;
+		Debug.Log("bumpkillcheck: "+((Player.playerA == myplayer) ? "A" : "B") + ": " + v.magnitude);
+		if (v.magnitude > bumpkill_dist) return;
+		if (v.normalized.y >= -0.5) return;
+		otherplayer.Die();
+	
+		/*
+		// jump and bump killing (jump on head)
+		PlayerLocal otherplayer = hit.gameObject.GetComponent<PlayerLocal>();
+		if (otherplayer) {
+			Vector3 toOther = (otherplayer.transform.position - transform.position).normalized;
+			otherplayer.GetComponent<Player>().Die();
+		}
+		*/
+	}
+	
 	public void setKeyBindings(string left, string right, string jump)
 	{
 		this.keyLeft = left;	
@@ -169,6 +191,15 @@ public class PlayerLocal : MonoBehaviour {
 			if (hit.moveDirection.x < 0f) { iTouchesWallXNormal =  1; bTouchesWallLeft = true; }
 			if (hit.moveDirection.x > 0f) { iTouchesWallXNormal = -1; bTouchesWallRight = true; }
 		}
+		
+		/*
+		// jump and bump killing (jump on head)
+		PlayerLocal otherplayer = hit.gameObject.GetComponent<PlayerLocal>();
+		if (otherplayer) {
+			Vector3 toOther = (otherplayer.transform.position - transform.position).normalized;
+			otherplayer.GetComponent<Player>().Die();
+		}
+		*/
 		
 		// blood test 1
 		GameObject o = hit.gameObject;
@@ -328,5 +359,6 @@ float	ChangeValueWithSpeed	(float old,float target,float change_speed) {
 		}
 		
 		player.onGround = controller.isGrounded;
+		JumpAndBumpKillCheck();
 	}
 }

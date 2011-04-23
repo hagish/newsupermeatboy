@@ -10,8 +10,13 @@ public class Player : MonoBehaviour {
 	public bool onGround = true;
 	public int playerNr = 0;
 	
+	public static Player playerA = null;
+	public static Player playerB = null;
+	
 	// Use this for initialization
 	void Start () {
+		if (playerA == null) playerA = this; else playerB = this;
+		
 		Respawn();
 		
 		anim = GetComponentInChildren<Animation>();
@@ -94,7 +99,7 @@ public class Player : MonoBehaviour {
 		}
 	}
 	
-	void Die ()
+	public void Die ()
 	{
 		SpawnGibs();
 		Respawn();
