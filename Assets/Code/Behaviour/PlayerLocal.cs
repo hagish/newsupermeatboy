@@ -27,7 +27,7 @@ public class PlayerLocal : MonoBehaviour {
 	public static float myJumpSpeed = 25.0F;
 	public static float slide_keep_speed = 0.1f*speed_air; // move a bit against wall to keep sliding-collisions
 	public static float slide_jump_speed_x = 0.8f*speed_air;
-	public static float slide_jump_speed_y = 0.9f*myJumpSpeed;
+	public static float slide_jump_speed_y = 1.1f*myJumpSpeed;
 	public static float slide_grav_factor = 0.4f;
 	public static float airborne_x_slowdown_factor = 0.1f; // no dir key pressed
 	public static float airborne_x_accel_factor = 0.1f; // dir key pressed
