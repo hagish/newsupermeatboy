@@ -5,8 +5,9 @@ public class BandageGirl : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		
-		
+		Animation anim = transform.GetChild(0).GetComponentInChildren<Animation>();		
+		anim.wrapMode = WrapMode.Loop;
+		anim.Play();
 	}
 	
 	// Update is called once per frame
