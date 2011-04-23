@@ -21,7 +21,33 @@ public class PlayerLocal : MonoBehaviour {
 	bool	bTouchesWallLeft = false;
 	bool	bTouchesWallRight = false;
 	int		iTouchesWallXNormal = 0;
-	
+		
+	public static float speed_ground = 15.0F;
+	public static float speed_air    = 20.0F;
+	public static float myJumpSpeed = 25.0F;
+	public static float slide_keep_speed = 0.1f*speed_air; // move a bit against wall to keep sliding-collisions
+	public static float slide_jump_speed_x = 0.8f*speed_air;
+	public static float slide_jump_speed_y = 0.9f*myJumpSpeed;
+	public static float slide_grav_factor = 0.4f;
+	public static float airborne_x_slowdown_factor = 0.1f; // no dir key pressed
+	public static float airborne_x_accel_factor = 0.1f; // dir key pressed
+	public static float airborne_speed_change = 6f*speed_air;
+	public static float grounded_speed_change = 6f*speed_ground;
+
+	public static float gravity = 80.0F;
+	private Vector3 moveSpeed = Vector3.zero;
+	bool bJumpBlocked = false;
+	bool bSlidingLeft = false;
+	bool bSlidingRight = false;
+	bool bLeftPressKnown = false;
+	bool bRightPressKnown = false;
+	bool bDirKeyPressedSinceJump = false;
+
+	float time_since_jump = 0f;
+	public static float time_since_jump_airmove_slower = 0.1f; // airmove ineffective shortly after jump
+
+
+
 	public void	MyMoveInit	() {
 		bTouchesWall = false;
 		bTouchesWallLeft = false;
@@ -30,10 +56,20 @@ public class PlayerLocal : MonoBehaviour {
 	}
 	void OnControllerColliderHit(ControllerColliderHit hit) {
 		//Debug.Log("mainchar:OnControllerColliderHit");
-		if (Mathf.Abs(hit.moveDirection.x) < 0.3) return;
-		bTouchesWall = true;
-		if (hit.moveDirection.x < 0) { iTouchesWallXNormal =  1; bTouchesWallLeft = true; }
-		if (hit.moveDirection.x > 0) { iTouchesWallXNormal = -1; bTouchesWallRight = true; }
+		
+		// collide blocks speed
+		float e = 0.3f;
+		if (hit.moveDirection.x < -e) moveSpeed.x = Mathf.Max(0f,moveSpeed.x);
+		if (hit.moveDirection.x >  e) moveSpeed.x = Mathf.Min(0f,moveSpeed.x);
+		if (hit.moveDirection.y < -e) moveSpeed.y = Mathf.Max(0f,moveSpeed.y);
+		if (hit.moveDirection.y >  e) moveSpeed.y = Mathf.Min(0f,moveSpeed.y);
+		
+		// sideway collision
+		if (Mathf.Abs(hit.moveDirection.x) > 0.3f) {
+			bTouchesWall = true;
+			if (hit.moveDirection.x < 0f) { iTouchesWallXNormal =  1; bTouchesWallLeft = true; }
+			if (hit.moveDirection.x > 0f) { iTouchesWallXNormal = -1; bTouchesWallRight = true; }
+		}
 	}
 	
 	// never called 
@@ -42,31 +78,23 @@ public class PlayerLocal : MonoBehaviour {
 	// never called 
 	void OnCollisionStay(Collision collisionInfo) {  }
 
-public static float speed_ground = 15.0F;
-public static float speed_air    = 20.0F;
-public static float myJumpSpeed = 25.0F;
-public static float slide_keep_speed = 0.1f*speed_air; // move a bit against wall to keep sliding-collisions
-public static float slide_jump_speed_x = 0.6f*speed_air;
-public static float slide_jump_speed_y = 0.8f*myJumpSpeed;
-public static float slide_grav_factor = 0.4f;
-public static float airborne_x_slowdown_factor = 0.1f; // no dir key pressed
-public static float airborne_x_accel_factor = 0.1f; // dir key pressed
-public static float airborne_speed_change = 6f*speed_air;
-
-public static float gravity = 80.0F;
-private Vector3 moveDirection = Vector3.zero;
-bool bJumpBlocked = false;
-bool bSlidingLeft = false;
-bool bSlidingRight = false;
-bool bLeftPressKnown = false;
-bool bRightPressKnown = false;
-bool bDirKeyPressedSinceJump = false;
-
-float  ApplyX ( float x0,float dt, float x1) {
-	float f = Mathf.Min(1f,dt * 2f);
-	float fi = 1f - f;
-	return fi*x0 + f*x1;
+float  Interpolate ( float a, float b,float t) {
+	if (t < 0f) return a;
+	if (t > 1f) return b;
+	return (1f-t)*a + t*b;
 }
+
+float	ChangeValueWithSpeed	(float old,float target,float change_speed) {
+	float dist = (target > old) ? (target - old) : (old - target);
+	if (dist < change_speed) {
+		return target;
+	} else {
+		if (target > old) 
+				return old + change_speed;
+		else	return old - change_speed;
+	}
+}
+
 	// Update is called once per frame
 	void Update () {
 		CharacterController controller = GetComponent<CharacterController>();
@@ -77,24 +105,30 @@ float  ApplyX ( float x0,float dt, float x1) {
 		if (!bRight) bRightPressKnown = false;
 		if ((bLeft && !bLeftPressKnown) || (bRight && !bRightPressKnown)) bDirKeyPressedSinceJump = true;
 		
+		time_since_jump += Time.deltaTime;
+		if (controller.isGrounded) time_since_jump = 0f;
+		
 		// bJumpBlocked : bJump is only true for one frame
 		if (!bJump) bJumpBlocked = false;
 		if (bJumpBlocked) bJump = false;
 		if (bJump) bJumpBlocked = true;
 		
 		if (controller.isGrounded) {
-			moveDirection.x = 0;
-			//if (Input.GetKey("w") || Input.GetKey("up"))	moveDirection.y -= s;
-			//if (Input.GetKey("s") || Input.GetKey("down"))	moveDirection.y += s;
+			float target_x_speed = 0;
+			if (bLeft)	target_x_speed = -speed_ground;
+			if (bRight)	target_x_speed =  speed_ground;
+			// Debug.Log("ground:"+moveSpeed.x+","+target_x_speed+","+ChangeValueWithSpeed(moveSpeed.x,target_x_speed,grounded_speed_change * Time.deltaTime));
+			moveSpeed.x = ChangeValueWithSpeed(moveSpeed.x,target_x_speed,grounded_speed_change * Time.deltaTime);
+			// moveSpeed.x = target_speed;
+			//if (Input.GetKey("w") || Input.GetKey("up"))	moveSpeed.y -= s;
+			//if (Input.GetKey("s") || Input.GetKey("down"))	moveSpeed.y += s;
 			// Input.GetAxis("Horizontal")  Input.GetAxis("Vertical");
 			// transform.position += new Vector3(-s,0,0);
 			// rigidbody.AddForce(Vector3.left * s);
-			if (bLeft)	moveDirection.x = -speed_ground;
-			if (bRight)	moveDirection.x =  speed_ground;
-			
 			if (bJump) { // jump from ground
 				bDirKeyPressedSinceJump = false;
-				moveDirection.y = myJumpSpeed;
+				moveSpeed.y = myJumpSpeed;
+				time_since_jump = 0f;
 			}
 		} else {
 			// airborne, not instant velocity set.
@@ -102,25 +136,21 @@ float  ApplyX ( float x0,float dt, float x1) {
 				float target_x_speed = 0f;
 				if (bLeft)	target_x_speed = -speed_air;
 				if (bRight)	target_x_speed =  speed_air;
-				
-				float my_speed_change = airborne_speed_change * Time.deltaTime;
-				if (Mathf.Abs(moveDirection.x-target_x_speed) < my_speed_change) {
-					moveDirection.x = target_x_speed;
-				} else {
-					if (target_x_speed > moveDirection.x) 
-							moveDirection.x += my_speed_change;
-					else	moveDirection.x -= my_speed_change;
-				}
+				// Debug.Log("airborne:"+moveSpeed.x+","+target_x_speed+","+ChangeValueWithSpeed(moveSpeed.x,target_x_speed,airborne_speed_change * Time.deltaTime));
+				float change_speed = airborne_speed_change;
+				if (time_since_jump < time_since_jump_airmove_slower)
+					change_speed *= time_since_jump/time_since_jump_airmove_slower;
+				moveSpeed.x = ChangeValueWithSpeed(moveSpeed.x,target_x_speed,change_speed * Time.deltaTime);
 			// }
 				
 			/*
 			if (target_x_speed == 0f) {
 				if (bDirKeyPressedSinceJump) // don't break if slide-jump and no other key pressed yet
-					moveDirection.x *= 1f-airborne_x_slowdown_factor;
+					moveSpeed.x *= 1f-airborne_x_slowdown_factor;
 			} else {
 				float f = airborne_x_accel_factor;
 				float fi = 1f - f;
-				moveDirection.x = fi*moveDirection.x + f*target_x_speed;
+				moveSpeed.x = fi*moveSpeed.x + f*target_x_speed;
 			}
 			*/
 		}
@@ -131,41 +161,44 @@ float  ApplyX ( float x0,float dt, float x1) {
 		if (!controller.isGrounded && bTouchesWall) {
 			bool bWallSlide = (bTouchesWallLeft && bLeft) || (bTouchesWallRight && bRight);
 			if (bJump) {
-				moveDirection.x = slide_jump_speed_x*iTouchesWallXNormal;
-				moveDirection.y = slide_jump_speed_y;
+				moveSpeed.x = slide_jump_speed_x*iTouchesWallXNormal;
+				moveSpeed.y = slide_jump_speed_y;
 			}
-			if (moveDirection.y < 0f && bWallSlide) fGravFactor = 0.3f;
+			if (moveSpeed.y < 0f && bWallSlide) fGravFactor = 0.3f;
 		}
 		*/
 		
 		float fGravFactor = 1;
 		
 		// when sliding move a bit in the direction of the wall, so we get new collision messages
-		if (bSlidingLeft) moveDirection.x -= slide_keep_speed;
-		if (bSlidingRight) moveDirection.x += slide_keep_speed;
+		if (!controller.isGrounded) {
+			if (bSlidingLeft) moveSpeed.x -= slide_keep_speed * Time.deltaTime;
+			if (bSlidingRight) moveSpeed.x += slide_keep_speed * Time.deltaTime;
+		}
 		
 		// when sliding, slow down y movement (reduce gravity)
-		if ((bSlidingLeft || bSlidingRight) && moveDirection.y < 0f) { fGravFactor = slide_grav_factor; }
+		if ((bSlidingLeft || bSlidingRight) && moveSpeed.y < 0f) { fGravFactor = slide_grav_factor; }
 		
 		// jump while sliding
 		bool bSlideJump = !controller.isGrounded && bJump && (bSlidingLeft || bSlidingRight);
 		if (bSlideJump) {
 			bDirKeyPressedSinceJump = false;
+			time_since_jump = 0f;
 			if (bSlidingLeft) {
-				moveDirection.x =  slide_jump_speed_x;
-				moveDirection.y =  slide_jump_speed_y;
+				moveSpeed.x =  slide_jump_speed_x;
+				moveSpeed.y =  slide_jump_speed_y;
 			}
 			if (bSlidingRight) {
-				moveDirection.x = -slide_jump_speed_x;
-				moveDirection.y =  slide_jump_speed_y;
+				moveSpeed.x = -slide_jump_speed_x;
+				moveSpeed.y =  slide_jump_speed_y;
 			}
 		}
-		moveDirection.y -= gravity * fGravFactor * Time.deltaTime;
+		moveSpeed.y -= gravity * fGravFactor * Time.deltaTime;
 		
 		bSlidingLeft = false;
 		bSlidingRight = false;
 		MyMoveInit();
-		controller.Move(moveDirection * Time.deltaTime);
+		controller.Move(moveSpeed * Time.deltaTime);
 		
 		if (bTouchesWallLeft) bSlidingLeft = true;
 		if (bTouchesWallRight) bSlidingRight = true;
