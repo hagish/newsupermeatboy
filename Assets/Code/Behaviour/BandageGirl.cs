@@ -18,8 +18,12 @@ public class BandageGirl : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider other) 
 	{
-		other.SendMessage("GameWon", SendMessageOptions.DontRequireReceiver);
+		Player p = other.gameObject.GetComponent<Player>();
 		
-		// Play Winning animation
+		if (p != null)
+		{
+			// Play Winning animation
+			Game.game.playerFinished(p.playerNr, p);
+		}
 	}
 }
