@@ -51,4 +51,31 @@ public static class GameObjectHelper {
 			visitComponentsDeep<T>(child, callback);
 		}
 	}
+	
+	public static GameObject createObject(GameObject parent, string prefab, bool syncWithNet, Vector3 position, Quaternion rotation)
+	{
+		var res = Resources.Load(prefab);
+		
+		if (res == null)
+		{
+			Debug.LogError("could not load prefab: " + prefab);
+		}
+		
+		GameObject g = null;
+		
+		if (syncWithNet && Network.peerType != NetworkPeerType.Disconnected)
+		{
+			g = (GameObject) Network.Instantiate(res, position, rotation, 0);
+		}
+		else
+		{
+			g = (GameObject) GameObject.Instantiate(res);
+			g.transform.position = position;
+			g.transform.rotation = rotation;
+		}
+		
+		g.transform.parent = parent.transform;
+		
+		return g;
+	}
 }

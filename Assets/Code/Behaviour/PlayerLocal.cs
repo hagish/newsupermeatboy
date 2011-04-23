@@ -11,7 +11,7 @@ phys	http://unity3d.com/support/documentation/Components/comp-DynamicsGroup.html
 printf : Debug.Log
 */
 
-public class PlayerLocal : Player {
+public class PlayerLocal : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

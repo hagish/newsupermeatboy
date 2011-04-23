@@ -113,16 +113,8 @@ public class BaseTurretHead : MonoBehaviour
 	private void Fire()
 	{
 		//spawn bullet
-		GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-		
-		obj.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-		obj.transform.rotation = transform.rotation;
-		obj.transform.Rotate(90.0f, 0.0f, 0.0f);
-		obj.transform.localScale = new Vector3(0.25f,0.25f,0.25f);
-		BaseBullet bullet = obj.AddComponent<BaseBullet>();
-		bullet.TargetPositon = Target.transform.position;
-		
-		
+		GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Bullet", true, transform.position, transform.rotation);
+		obj.GetComponent<BaseBullet>().TargetPositon = Target.transform.position;
 	}
 }
 

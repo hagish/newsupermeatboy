@@ -19,7 +19,7 @@ public class BaseBullet : MonoBehaviour
 	void Start()
 	{
 		Debug.Log("I have been created");
-		
+		gameObject.AddComponent<NetworkView>();
 	}
 
 	// Update is called once per frame
