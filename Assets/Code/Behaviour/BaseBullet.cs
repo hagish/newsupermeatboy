@@ -11,7 +11,7 @@ public class BaseBullet : MonoBehaviour
 	public Vector3 FlightVector
 	{
 		get { return _flightVector; }
-		set { _flightVector = new Vector3(value.x - transform.position.x, value.y - transform.position.y, value.z); }
+		set { _flightVector = value - transform.position; }
 	}
 	
 	//flying distance
