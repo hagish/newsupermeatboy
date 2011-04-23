@@ -5,6 +5,8 @@ public class Startup : MonoBehaviour {
 	private string ip;
 	private int port;
 	
+	private string mapToLoad = "level1";
+	
 	// Use this for initialization
 	void Start () {
 		ip = "192.168.2.139";
@@ -25,12 +27,12 @@ public class Startup : MonoBehaviour {
 	
 	void OnServerInitialized () {
 		Debug.Log("server initialized and ready");
-		Application.LoadLevel(1);
+		Application.LoadLevel(mapToLoad);
 	}
 	
 	void OnConnectedToServer () {
 		Debug.Log("connected to server");
-		Application.LoadLevel(1);
+		Application.LoadLevel(mapToLoad);
 	}
 	
 	void Join () {
@@ -44,6 +46,21 @@ public class Startup : MonoBehaviour {
 			if (Network.peerType == NetworkPeerType.Disconnected) {
 				LaunchServer();
 			}
+		}
+		
+		if(GUILayout.Button("Level 1"))
+		{
+			mapToLoad = "level1";
+		}
+		
+		if(GUILayout.Button("Level 2"))
+		{
+			mapToLoad = "level2";
+		}
+		
+		if(GUILayout.Button("Level 3"))
+		{
+			mapToLoad = "level3";
 		}
 		
 		GUILayout.Label("ip");
