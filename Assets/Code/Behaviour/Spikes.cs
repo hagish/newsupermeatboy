@@ -21,7 +21,7 @@ public class Spikes : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!NetworkHelper.instance.isServer())return;
+		if (!NetworkHelper.isServer())return;
 		
 		// Check if deltaPos has values and then apply interpolation
         if (UseAnimation)

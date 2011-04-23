@@ -20,7 +20,7 @@ public class Key : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!NetworkHelper.instance.isServer())return;
+		if (!NetworkHelper.isServer())return;
 
 		// Check if deltaPos has values and then apply interpolation
         if (UseAnimation)
@@ -34,7 +34,7 @@ public class Key : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider other)
 	{
-		if (!NetworkHelper.instance.isServer())return;
+		if (!NetworkHelper.isServer())return;
 		
 		other.SendMessage("KeyGot", SendMessageOptions.DontRequireReceiver);
 		this.renderer.enabled = false;
