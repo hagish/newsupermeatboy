@@ -37,10 +37,10 @@ public class PlayerLocal : MonoBehaviour {
 	}
 	
 	// never called 
-	void OnCollisionEnter(Collision collision) { Debug.Log("mainchar:OnCollisionEnter"); }
+	void OnCollisionEnter(Collision collision) {  }
 	
 	// never called 
-	void OnCollisionStay(Collision collisionInfo) { Debug.Log("mainchar:OnCollisionStay"); }
+	void OnCollisionStay(Collision collisionInfo) {  }
 
 public static float speed_ground = 15.0F;
 public static float speed_air    = 20.0F;

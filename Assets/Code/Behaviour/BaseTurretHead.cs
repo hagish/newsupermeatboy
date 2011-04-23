@@ -18,6 +18,8 @@ public class BaseTurretHead : MonoBehaviour
 		set { _target = value; }
 	}
 	
+	public Rigidbody Bullet;
+	
 	//the turret fires all 'value' seconds a bullet
 	public int AttackSpeed = 5;
 	
@@ -37,11 +39,7 @@ public class BaseTurretHead : MonoBehaviour
 			CheckForPlayersInRange();
 		else
 		{
-			if(IsPlayerStillInRange())
-			{
-				
-			}
-			else
+			if(IsPlayerOutOfRange())
 			{
 				//the player is out of range, so we have no target
 				Target = null;
@@ -85,9 +83,9 @@ public class BaseTurretHead : MonoBehaviour
 	{
 		float distance = Vector3.Distance(transform.position, Target.transform.position);
 		if( distance <= AttackRange)
-			return true;
+			return false;
 		
-		return false;
+		return true;
 	}
 	
 	private void RotateHead()
