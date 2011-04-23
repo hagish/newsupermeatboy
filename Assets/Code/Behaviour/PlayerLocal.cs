@@ -26,10 +26,6 @@ public class PlayerLocal : MonoBehaviour {
 	
 	private Player player;
 	
-	// Use this for initialization
-	void Start () {
-		player = GetComponent<Player>();
-	}
 	
 	public static Object prefab_bloodball; 
 	
@@ -100,6 +96,12 @@ public class PlayerLocal : MonoBehaviour {
 		*/
 	}
 	
+	// Use this for initialization
+	void Start () {
+		player = GetComponent<Player>();
+		Physics.gravity = new Vector3(0f, -40f, 0f);
+	}
+	
 	public KeyCode keyLeft = KeyCode.LeftArrow;
 	public KeyCode keyRight = KeyCode.RightArrow;
 	public KeyCode keyJump = KeyCode.UpArrow;
@@ -121,10 +123,10 @@ public class PlayerLocal : MonoBehaviour {
 				inner.max.z <= outer.max.z;
 	}
 	
-	static void SpawnBloodOnContact (ControllerColliderHit hit) {
-		Vector3 hit_moveDirection = hit.moveDirection;
-		Vector3 hit_point = hit.point;
-		Vector3 hit_normal = hit.normal;
+	
+	
+	
+	public static void SpawnBloodOnContact2 (Vector3 hit_point,Vector3 hit_normal) {
 	
 		// orhto test to avoid misplaced blobs at edges : didn't work well
 		// float dx = hit_moveDirection.x;
@@ -162,6 +164,24 @@ public class PlayerLocal : MonoBehaviour {
 			// g.transform.rotation = transform.rotation;
 			// g.transform.parent = transform;
 		}
+	}
+	
+	
+	public static bool BloodAgainstObjectAllowed (GameObject o) {
+		if (o.GetComponent<MeatBall>()) return false;
+		if (o.GetComponent<Spikes>()) return false;
+		if (o.GetComponent<Chainsaw>()) return false;
+		if (o.GetComponent<PlayerLocal>()) return false;
+		return true;
+	}
+	
+	public static void SpawnBloodOnContact (ControllerColliderHit hit) {
+		Vector3 hit_moveDirection = hit.moveDirection;
+		Vector3 hit_point = hit.point;
+		Vector3 hit_normal = hit.normal;
+		
+		if (!BloodAgainstObjectAllowed(hit.gameObject)) return;
+		SpawnBloodOnContact2(hit_point,hit_normal);
 	}
 
 	public void	MyMoveInit	() {
@@ -335,7 +355,9 @@ float	ChangeValueWithSpeed	(float old,float target,float change_speed) {
 		bSlidingLeft = false;
 		bSlidingRight = false;
 		MyMoveInit();
+		//float oldz = controller.transform.z;
 		controller.Move(moveSpeed * Time.deltaTime);
+		//controller.transform.z = oldz;
 		
 		if (bTouchesWallLeft) bSlidingLeft = true;
 		if (bTouchesWallRight) bSlidingRight = true;
