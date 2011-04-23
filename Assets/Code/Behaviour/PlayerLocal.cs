@@ -86,6 +86,9 @@ public class PlayerLocal : MonoBehaviour {
 		if (v.normalized.y >= -0.5) return;
 		otherplayer.Die();
 	
+				bDirKeyPressedSinceJump = false;
+				moveSpeed.y = myJumpSpeed;
+				time_since_jump = 0f;
 		/*
 		// jump and bump killing (jump on head)
 		PlayerLocal otherplayer = hit.gameObject.GetComponent<PlayerLocal>();
