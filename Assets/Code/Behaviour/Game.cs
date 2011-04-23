@@ -3,9 +3,7 @@ using System.Collections;
 
 public class Game : MonoBehaviour {
 	public static Game game;
-	
-	public Transform playerPrefab;
-	
+
 	// Use this for initialization
 	void Start () {
 		game = this;
