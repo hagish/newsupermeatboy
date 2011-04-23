@@ -8,14 +8,28 @@ keys	http://unity3d.com/support/documentation/ScriptReference/Input.GetKey.html
 phys	http://unity3d.com/support/documentation/Components/comp-DynamicsGroup.html
 	rigid	http://unity3d.com/support/documentation/Components/class-Rigidbody.html
 	char	http://unity3d.com/support/documentation/Components/class-CharacterController.html
+mat		http://unity3d.com/support/documentation/ScriptReference/Material.html
 printf : Debug.Log
+
+spawn stuff :
+		GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Bullet", true, transform.position, transform.rotation);
+		obj.GetComponent<BaseBullet>().TargetPositon = Target.transform.posit
+		
+		GameObject p = new GameObject("Player");
+		p.AddComponent<Player>();
+
+send messages
+		other.gameObject.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
 */
 
 public class PlayerLocal : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+	
 	}
+	
+	public static Object prefab_bloodball; 
 	
 	bool	bTouchesWall = false;
 	bool	bTouchesWallLeft = false;
@@ -42,17 +56,49 @@ public class PlayerLocal : MonoBehaviour {
 	bool bLeftPressKnown = false;
 	bool bRightPressKnown = false;
 	bool bDirKeyPressedSinceJump = false;
+	float nextbloodt = 0f;
+	float fBloodInterval = 1f/30f;
+	Vector3 vLastBloodPos;
 
 	float time_since_jump = 0f;
 	public static float time_since_jump_airmove_slower = 0.1f; // airmove ineffective shortly after jump
 
 
+	static void SpawnBloodOnContact (ControllerColliderHit hit) {
+		Vector3 hit_moveDirection = hit.moveDirection;
+		Vector3 hit_point = hit.point;
+		Vector3 hit_normal = hit.normal;
+	
+		float dx = hit_moveDirection.x;
+		float dy = hit_moveDirection.y;
+		float fMinOrtho = 0.8f;
+		
+		
+		// if (Mathf.Abs(dx) > fMinOrtho || Mathf.Abs(dy) > fMinOrtho) {
+			// TODO : network ? GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Sphere", true, transform.position+hit.moveDirection, transform.rotation);
+			var res = Resources.Load("BloodBall");
+			if (res) {
+				GameObject g = (GameObject)GameObject.Instantiate(res);
+				
+				g.transform.position = hit_point;
+				Vector3 forward = hit_normal;
+				Vector3 up = Vector3.Cross(forward,Vector3.forward);
+				g.transform.rotation = Quaternion.LookRotation(forward,up);
+				
+				// p.AddComponent<MeshFilter>();
+				// p.AddComponent<MeshRenderer>();
+				// g.transform.rotation = transform.rotation;
+				// g.transform.parent = transform;
+			}
+		// }
+	}
 
 	public void	MyMoveInit	() {
 		bTouchesWall = false;
 		bTouchesWallLeft = false;
 		bTouchesWallRight = false;
 		iTouchesWallXNormal = 0;
+		
 	}
 	void OnControllerColliderHit(ControllerColliderHit hit) {
 		//Debug.Log("mainchar:OnControllerColliderHit");
@@ -69,6 +115,17 @@ public class PlayerLocal : MonoBehaviour {
 			bTouchesWall = true;
 			if (hit.moveDirection.x < 0f) { iTouchesWallXNormal =  1; bTouchesWallLeft = true; }
 			if (hit.moveDirection.x > 0f) { iTouchesWallXNormal = -1; bTouchesWallRight = true; }
+		}
+		
+		// blood test 1
+		GameObject o = hit.gameObject;
+		// if (o) o.renderer.material.color = Color.red;
+
+		// blood test 2
+		if (Time.time > nextbloodt) {
+			nextbloodt = Time.time + fBloodInterval;
+			SpawnBloodOnContact(hit);
+			
 		}
 	}
 	
