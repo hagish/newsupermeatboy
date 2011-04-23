@@ -4,6 +4,8 @@ using System.Collections;
 public class Game : MonoBehaviour {
 	public static Game game;
 	
+	private int winningPlayerNr = 0;
+	
 	public Vector3 findSpawnPosition(int playerNr)
 	{
 		if (GameObject.Find("SpawnPoint" + playerNr) != null) return GameObject.Find("SpawnPoint" + playerNr).transform.position;
@@ -15,7 +17,7 @@ public class Game : MonoBehaviour {
 	void Start () {
 		game = this;
 
-        switch (Input.P1InputType)
+        switch (InputConfig.P1InputType)
         {
         	case "Arrow Keys": createLocalPlayer(1, KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.UpArrow); break;
             case "Left/Right Arrow + Space": createLocalPlayer(1, KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.Space); break;
@@ -23,12 +25,20 @@ public class Game : MonoBehaviour {
             case "Joystick/Gamepad 1": createLocalPlayer(2, KeyCode.Joystick1Button7, KeyCode.Joystick1Button8, KeyCode.Joystick1Button16); break;
         }
 
-        switch (Input.P2InputType)
+        switch (InputConfig.P2InputType)
         {
         	case "WSAD": createLocalPlayer(2, KeyCode.A, KeyCode.D, KeyCode.W); break;
             case "Joystick/Gamepad 2": createLocalPlayer(2, KeyCode.Joystick2Button7, KeyCode.Joystick2Button8, KeyCode.Joystick2Button16); break;
         }
 
+	}
+	
+	public void playerFinished(int playerNr, Player player)
+	{
+		if (winningPlayerNr == 0)
+		{
+			winningPlayerNr = playerNr;	
+		}
 	}
 	
 	private void createLocalPlayer(int playerNr, KeyCode keyLeft, KeyCode keyRight, KeyCode keyJump)
@@ -42,7 +52,7 @@ public class Game : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Joystick1Button16)) Debug.Log(KeyCode.Joystick1Button16);
+	
 	}
 	
 	void createNetworkPlayer ()
@@ -60,5 +70,21 @@ public class Game : MonoBehaviour {
 		Network.RemoveRPCs(player, 0);
 		Network.DestroyPlayerObjects(player);
 		Debug.Log("Player left from " + player.ipAddress + ":" + player.port);
+	}
+	
+	void OnGUI() {
+		if (GUI.Button(new Rect(5, 5, 100, 25), "back to menu"))
+	    {
+	    	Application.LoadLevel(0);
+	    }
+	
+		int x = (int)((float)Screen.width * 0.45f);
+		int y = (int)((float)Screen.height * 0.45f);
+		
+		if (winningPlayerNr > 0)
+		{
+			GUI.Label(new Rect(x, y, 200, 50), "player " + winningPlayerNr + " won!");
+			
+		}
 	}
 }
