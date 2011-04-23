@@ -6,6 +6,10 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Respawn();
+		
+		Animation anim = GetComponentInChildren<Animation>();
+		anim.CrossFade("run");
+		anim.wrapMode = WrapMode.Loop;
 	}
 	
 	// Update is called once per frame

@@ -13,12 +13,6 @@ public class BaseBullet : MonoBehaviour
 	private float _flightDistance = 18.0f;
 	private float _flown = 0.0f;
 	
-	private bool isNetworkStub = false;
-
-	void OnNetworkInstantiate(NetworkMessageInfo info) {
-		isNetworkStub = true;
-	}
-	
 	// Use this for initialization
 	void Start()
 	{
@@ -28,7 +22,7 @@ public class BaseBullet : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		if (isNetworkStub)return;
+		if (!NetworkHelper.instance.isServer())return;
 		
 		//Check if a player has been hit
 		if(CollisionCheck() == false)
