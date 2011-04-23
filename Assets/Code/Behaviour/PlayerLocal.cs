@@ -65,34 +65,54 @@ public class PlayerLocal : MonoBehaviour {
 	float time_since_jump = 0f;
 	public static float time_since_jump_airmove_slower = 0.1f; // airmove ineffective shortly after jump
 
-
+	static bool BoundsContainedIn (Bounds inner,Bounds outer) {
+		return	inner.min.x >= outer.min.x &&
+				inner.min.y >= outer.min.y &&
+				inner.min.z >= outer.min.z &&
+				inner.max.x <= outer.max.x &&
+				inner.max.y <= outer.max.y &&
+				inner.max.z <= outer.max.z;
+	}
+	
 	static void SpawnBloodOnContact (ControllerColliderHit hit) {
 		Vector3 hit_moveDirection = hit.moveDirection;
 		Vector3 hit_point = hit.point;
 		Vector3 hit_normal = hit.normal;
 	
-		float dx = hit_moveDirection.x;
-		float dy = hit_moveDirection.y;
-		float fMinOrtho = 0.8f;
+		// orhto test to avoid misplaced blobs at edges : didn't work well
+		// float dx = hit_moveDirection.x;
+		// float dy = hit_moveDirection.y;
+		// float fMinOrtho = 0.8f;
+		// if (Mathf.Abs(dx) <= fMinOrtho && Mathf.Abs(dy) <= fMinOrtho) return;
 		
 		
-		// if (Mathf.Abs(dx) > fMinOrtho || Mathf.Abs(dy) > fMinOrtho) {
-			// TODO : network ? GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Sphere", true, transform.position+hit.moveDirection, transform.rotation);
-			var res = Resources.Load("BloodBall");
-			if (res) {
-				GameObject g = (GameObject)GameObject.Instantiate(res);
-				
-				g.transform.position = hit_point;
-				Vector3 forward = hit_normal;
-				Vector3 up = Vector3.Cross(forward,Vector3.forward);
-				g.transform.rotation = Quaternion.LookRotation(forward,up);
-				
-				// p.AddComponent<MeshFilter>();
-				// p.AddComponent<MeshRenderer>();
-				// g.transform.rotation = transform.rotation;
-				// g.transform.parent = transform;
+		// TODO : network ? GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Sphere", true, transform.position+hit.moveDirection, transform.rotation);
+		var res = Resources.Load("BloodBall");
+		if (res) {
+			GameObject g = (GameObject)GameObject.Instantiate(res);
+			
+			Vector3 pos = hit_point;
+			Vector3 forward = hit_normal;
+			Vector3 up = Vector3.Cross(forward,Vector3.forward);
+			Quaternion rot = Quaternion.LookRotation(forward,up);
+			
+			g.transform.position = pos;
+			g.transform.rotation = rot;
+			
+			// check boundingbox to avoid misplaced blobs at edges
+			Bounds b1 = hit.collider.bounds;
+			Bounds b2 = g.renderer.bounds;
+			float e = 4f*Mathf.Min(Mathf.Min(b2.extents.x,b2.extents.y),b2.extents.z);
+			b1.Expand(new Vector3(e,e,e));
+			if (!BoundsContainedIn(b2,b1)) {
+				GameObject.Destroy(g);
 			}
-		// }
+			
+			// p.AddComponent<MeshFilter>();
+			// p.AddComponent<MeshRenderer>();
+			// g.transform.rotation = transform.rotation;
+			// g.transform.parent = transform;
+		}
 	}
 
 	public void	MyMoveInit	() {
