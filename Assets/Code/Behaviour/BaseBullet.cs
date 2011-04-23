@@ -6,18 +6,6 @@ public class BaseBullet : MonoBehaviour
 	//a bullet has a speed
 	private float _flightSpeed = 8.0f;
 	
-	// //Target
-	// private Player _target = null;
-	// public Player Target
-	// {
-		// get { return _target; }
-		// set
-		// {
-			// FlightVector = new Vector3(value.transform.position.x - transform.position.x, value.transform.position.y - transform.position.y, value.transform.position.z);
-			// _target = value;
-		// }
-	// }
-	
 	private Vector3 _flightVector;
 	
 	public Vector3 FlightVector
