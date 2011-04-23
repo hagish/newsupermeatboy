@@ -98,7 +98,7 @@ float  ApplyX ( float x0,float dt, float x1) {
 			}
 		} else {
 			// airborne, not instant velocity set.
-			if (bDirKeyPressedSinceJump) {
+			// if (bDirKeyPressedSinceJump) {
 				float target_x_speed = 0f;
 				if (bLeft)	target_x_speed = -speed_air;
 				if (bRight)	target_x_speed =  speed_air;
@@ -111,7 +111,7 @@ float  ApplyX ( float x0,float dt, float x1) {
 							moveDirection.x += my_speed_change;
 					else	moveDirection.x -= my_speed_change;
 				}
-			}
+			// }
 				
 			/*
 			if (target_x_speed == 0f) {
