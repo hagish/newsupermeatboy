@@ -16,7 +16,7 @@ public class Chainsaw : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (!NetworkHelper.instance.isServer())return;
+		if (!NetworkHelper.isServer())return;
 		
 		// Check if deltaPos has values and then apply interpolation
         transform.position = Vector3.Lerp(startPos, startPos + deltaPos, Mathf.PingPong(Time.time * speed, 1));

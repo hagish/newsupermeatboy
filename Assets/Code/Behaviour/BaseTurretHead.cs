@@ -31,7 +31,7 @@ public class BaseTurretHead : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		if (!NetworkHelper.instance.isServer())return;
+		if (!NetworkHelper.isServer())return;
 		
 		//RotateHead();
 		if(Target == null)
