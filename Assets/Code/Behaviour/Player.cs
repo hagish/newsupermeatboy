@@ -4,6 +4,10 @@ using System.Collections;
 public class Player : MonoBehaviour {
 	private Animation anim;
 	private float deepHole = 0.0f;
+	
+	// PlayerLocals writes into this
+	public bool onGround = true;
+	
 	// Use this for initialization
 	void Start () {
 		Respawn();

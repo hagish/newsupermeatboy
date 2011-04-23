@@ -4,11 +4,13 @@ using System.Collections;
 public class PlayerBlood : MonoBehaviour {
 	private GameObject blood;
 	private MovementDirection direction;
+	private Player player;
 	
 	// Use this for initialization
 	void Start () {
 		blood = GameObjectHelper.findChildBySubstringInName(gameObject, "blood");
 		direction = GetComponent<MovementDirection>();
+		player = GetComponent<Player>();
 	}
 	
 	// Update is called once per frame
@@ -22,7 +24,7 @@ public class PlayerBlood : MonoBehaviour {
 		
 		blood.transform.rotation = rot;
 		
-		bool particlesEnabled = direction.hasPositionChange();
+		bool particlesEnabled = player.onGround && direction.hasPositionChange();
 		
 		GameObjectHelper.visitComponentsInDirectChildren<ParticleEmitter>(blood, (e) => {
 			e.emit = particlesEnabled;

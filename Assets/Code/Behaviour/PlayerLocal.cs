@@ -297,5 +297,7 @@ float	ChangeValueWithSpeed	(float old,float target,float change_speed) {
 		} else {
 			player.playDirectedAnimation("idle", true);	
 		}
+		
+		player.onGround = controller.isGrounded;
 	}
 }
