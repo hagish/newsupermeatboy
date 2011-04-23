@@ -18,7 +18,7 @@ public class Game : MonoBehaviour {
 		game = this;
 		
 		// keynames see http://unity3d.com/support/documentation/Manual/Input.html
-		createLocalPlayer(1, "left", "right", "right shift");
+		createLocalPlayer(1, "left", "right", "up");
 		createLocalPlayer(2, "a", "d", "w");
 	}
 	
@@ -37,6 +37,14 @@ public class Game : MonoBehaviour {
 		GameObject.Find("Camera").GetComponent<CameraSmoothFollow>().setTarget(playerNr, player);
 		player.AddComponent<PlayerLocal>().setKeyBindings(keyLeft, keyRight, keyJump);
 		player.GetComponent<Player>().playerNr = playerNr;
+		
+		/*
+		Material mat = (Material)Resources.Load("player" + playerNr);
+		
+		GameObjectHelper.visitComponentsDeep<SkinnedMeshRenderer>(player, (r) => {
+			r.material = mat;
+		});
+		*/
 	}
 	
 	// Update is called once per frame
