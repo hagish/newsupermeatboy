@@ -91,7 +91,7 @@ public class PlayerLocal : MonoBehaviour {
 				time_since_jump = 0f;
 		/*
 		// jump and bump killing (jump on head)
-		PlayerLocal otherplayer = hit.gameObject.GetComponent<PlayerLocal>();
+		otherplayer = hit.gameObject.GetComponent<PlayerLocal>();
 		if (otherplayer) {
 			Vector3 toOther = (otherplayer.transform.position - transform.position).normalized;
 			otherplayer.GetComponent<Player>().Die();
