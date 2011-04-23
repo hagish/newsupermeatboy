@@ -5,11 +5,27 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		Respawn();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+	
+	void Respawn () {
+		transform.position = GameObject.Find("SpawnPoint").transform.position;
+		
+		PlayerLocal local = GetComponent<PlayerLocal>();
+		
+		if (local != null)
+		{
+			local.MyMoveInit();	
+		}
+	}
+	
+	void Die ()
+	{
+		Respawn();
 	}
 }

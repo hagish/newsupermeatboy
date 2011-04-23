@@ -15,14 +15,14 @@ public class PlayerLocal : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		transform.position = GameObject.Find("SpawnPoint").transform.position;
 	}
 	
 	bool	bTouchesWall = false;
 	bool	bTouchesWallLeft = false;
 	bool	bTouchesWallRight = false;
 	int		iTouchesWallXNormal = 0;
-	void	MyMoveInit	() {
+	
+	public void	MyMoveInit	() {
 		bTouchesWall = false;
 		bTouchesWallLeft = false;
 		bTouchesWallRight = false;
