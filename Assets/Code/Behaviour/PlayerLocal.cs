@@ -69,6 +69,15 @@ public class PlayerLocal : MonoBehaviour {
 	public string keyRight = "right";
 	public string keyJump = "space";
 	
+	
+	public void setKeyBindings(string left, string right, string jump)
+	{
+		this.keyLeft = left;	
+		this.keyRight = right;
+		this.keyJump = jump;
+	}*/
+	
+	
 	static float bumpkill_dist = 1.2f;
 	void	JumpAndBumpKillCheck () {
 		Player myplayer = GetComponent<Player>();
@@ -76,7 +85,7 @@ public class PlayerLocal : MonoBehaviour {
 		if (!myplayer) { Debug.Log("JumpAndBumpKillCheck no myplayer"); return; }
 		if (!otherplayer) { Debug.Log("JumpAndBumpKillCheck no otherplayer"); return; }
 		Vector3 v = otherplayer.transform.position - myplayer.transform.position;
-		Debug.Log("bumpkillcheck: "+((Player.playerA == myplayer) ? "A" : "B") + ": " + v.magnitude);
+		// Debug.Log("bumpkillcheck: "+((Player.playerA == myplayer) ? "A" : "B") + ": " + v.magnitude);
 		if (v.magnitude > bumpkill_dist) return;
 		if (v.normalized.y >= -0.5) return;
 		otherplayer.Die();
@@ -90,13 +99,6 @@ public class PlayerLocal : MonoBehaviour {
 		}
 		*/
 	}
-	
-	public void setKeyBindings(string left, string right, string jump)
-	{
-		this.keyLeft = left;	
-		this.keyRight = right;
-		this.keyJump = jump;
-	}*/
 	
 	public KeyCode keyLeft = KeyCode.LeftArrow;
 	public KeyCode keyRight = KeyCode.RightArrow;
