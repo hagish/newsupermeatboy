@@ -26,7 +26,8 @@ public class Chainsaw : MonoBehaviour {
 		
 	}
 	
-	void OnTriggerEnter(Collider other) {
-		other.SendMessage("Die");
+	void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject == GameObject.Find("Player")) Debug.Log("Insta-Death");
 	}
 }
