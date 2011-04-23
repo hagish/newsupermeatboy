@@ -26,6 +26,10 @@ public class PlayerLocal : MonoBehaviour {
 	
 	private Player player;
 	
+	// Use this for initialization
+	void Start () {
+		player = GetComponent<Player>();
+	}
 	
 	public static Object prefab_bloodball; 
 	
@@ -61,16 +65,9 @@ public class PlayerLocal : MonoBehaviour {
 	float time_since_jump = 0f;
 	public static float time_since_jump_airmove_slower = 0.1f; // airmove ineffective shortly after jump
 	
-	// keynames see http://unity3d.com/support/documentation/Manual/Input.html
-	public string keyLeft = "left";
+	/*public string keyLeft = "left";
 	public string keyRight = "right";
-	public string keyJump = "right shift";
-	
-	// Use this for initialization
-	void Start () {
-		player = GetComponent<Player>();
-		Physics.gravity = new Vector3(0f, -40f, 0f);
-	}
+	public string keyJump = "space";
 	
 	static float bumpkill_dist = 1.2f;
 	void	JumpAndBumpKillCheck () {
@@ -99,7 +96,19 @@ public class PlayerLocal : MonoBehaviour {
 		this.keyLeft = left;	
 		this.keyRight = right;
 		this.keyJump = jump;
+	}*/
+	
+	public KeyCode keyLeft = KeyCode.LeftArrow;
+	public KeyCode keyRight = KeyCode.RightArrow;
+	public KeyCode keyJump = KeyCode.UpArrow;
+	
+	public void setKeyBindings(KeyCode left, KeyCode right, KeyCode jump)
+	{
+		this.keyLeft = left;	
+		this.keyRight = right;
+		this.keyJump = jump;
 	}
+	
 	
 	static bool BoundsContainedIn (Bounds inner,Bounds outer) {
 		return	inner.min.x >= outer.min.x &&
@@ -110,8 +119,10 @@ public class PlayerLocal : MonoBehaviour {
 				inner.max.z <= outer.max.z;
 	}
 	
-	public static void SpawnBloodOnContact2 (Vector3 hit_point,Vector3 hit_normal) {
-	
+	static void SpawnBloodOnContact (ControllerColliderHit hit) {
+		Vector3 hit_moveDirection = hit.moveDirection;
+		Vector3 hit_point = hit.point;
+		Vector3 hit_normal = hit.normal;
 	
 		// orhto test to avoid misplaced blobs at edges : didn't work well
 		// float dx = hit_moveDirection.x;
@@ -149,23 +160,6 @@ public class PlayerLocal : MonoBehaviour {
 			// g.transform.rotation = transform.rotation;
 			// g.transform.parent = transform;
 		}
-	}
-	
-	public static bool BloodAgainstObjectAllowed (GameObject o) {
-		if (o.GetComponent<MeatBall>()) return false;
-		if (o.GetComponent<Spikes>()) return false;
-		if (o.GetComponent<Chainsaw>()) return false;
-		if (o.GetComponent<PlayerLocal>()) return false;
-		return true;
-	}
-	
-	public static void SpawnBloodOnContact (ControllerColliderHit hit) {
-		Vector3 hit_moveDirection = hit.moveDirection;
-		Vector3 hit_point = hit.point;
-		Vector3 hit_normal = hit.normal;
-		
-		if (!BloodAgainstObjectAllowed(hit.gameObject)) return;
-		SpawnBloodOnContact2(hit_point,hit_normal);
 	}
 
 	public void	MyMoveInit	() {

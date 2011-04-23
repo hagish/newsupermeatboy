@@ -16,10 +16,21 @@ public class Game : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		game = this;
-		
-		// keynames see http://unity3d.com/support/documentation/Manual/Input.html
-		createLocalPlayer(1, "left", "right", "up");
-		createLocalPlayer(2, "a", "d", "w");
+
+        switch (InputConfig.P1InputType)
+        {
+        	case "Arrow Keys": createLocalPlayer(1, KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.UpArrow); break;
+            case "Left/Right Arrow + Space": createLocalPlayer(1, KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.Space); break;
+            case "IJKL": createLocalPlayer(1, KeyCode.J, KeyCode.L, KeyCode.I); break;
+            case "Joystick/Gamepad 1": createLocalPlayer(2, KeyCode.Joystick1Button7, KeyCode.Joystick1Button8, KeyCode.Joystick1Button16); break;
+        }
+
+        switch (InputConfig.P2InputType)
+        {
+        	case "WSAD": createLocalPlayer(2, KeyCode.A, KeyCode.D, KeyCode.W); break;
+            case "Joystick/Gamepad 2": createLocalPlayer(2, KeyCode.Joystick2Button7, KeyCode.Joystick2Button8, KeyCode.Joystick2Button16); break;
+        }
+
 	}
 	
 	public void playerFinished(int playerNr, Player player)
@@ -30,21 +41,13 @@ public class Game : MonoBehaviour {
 		}
 	}
 	
-	private void createLocalPlayer(int playerNr, string keyLeft, string keyRight, string keyJump)
+	private void createLocalPlayer(int playerNr, KeyCode keyLeft, KeyCode keyRight, KeyCode keyJump)
 	{
 		Vector3 position = findSpawnPosition(playerNr);
 		GameObject player = GameObjectHelper.createObject(gameObject, "Player", true, position, Quaternion.identity);
 		GameObject.Find("Camera").GetComponent<CameraSmoothFollow>().setTarget(playerNr, player);
 		player.AddComponent<PlayerLocal>().setKeyBindings(keyLeft, keyRight, keyJump);
 		player.GetComponent<Player>().playerNr = playerNr;
-		
-		/*
-		Material mat = (Material)Resources.Load("player" + playerNr);
-		
-		GameObjectHelper.visitComponentsDeep<SkinnedMeshRenderer>(player, (r) => {
-			r.material = mat;
-		});
-		*/
 	}
 	
 	// Update is called once per frame
