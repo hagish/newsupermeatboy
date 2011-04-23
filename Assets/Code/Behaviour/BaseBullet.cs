@@ -16,7 +16,7 @@ public class BaseBullet : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		gameObject.AddComponent<NetworkView>();
+		
 	}
 
 	// Update is called once per frame

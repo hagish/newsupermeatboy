@@ -11,7 +11,7 @@ public class CameraSmoothFollow : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Vector3 viewPos = camera.WorldToViewportPoint(target.transform.position);
+		// Vector3 viewPos = camera.WorldToViewportPoint(target.transform.position);
 		
 		/*
 		float border = 0.1f;
