@@ -50,8 +50,6 @@ public class ParallaxScrolling : MonoBehaviour {
 		
 		Vector3 planeCurPos = myCamera.ViewportToScreenPoint(this.transform.position);
 		
-		Debug.Log(planeCurPos.ToString());
-		
 		if (!capX)
 		{
 			if ((bounds) && (planeCurPos.x > 0) && (Screen.width < planeCurPos.x))
