@@ -12,6 +12,7 @@ public class Chainsaw : MonoBehaviour {
 
 		// Set start position
 		startPos = transform.position;
+		GameObjectHelper.visitComponentsDeep<Animation>(gameObject, (a) => { a.wrapMode = WrapMode.Loop; });
 	}
 
 	// Update is called once per frame
