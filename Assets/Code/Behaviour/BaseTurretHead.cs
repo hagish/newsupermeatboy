@@ -22,7 +22,7 @@ public class BaseTurretHead : MonoBehaviour
 	
 	//the turret fires all 'value' seconds a bullet
 	public int AttackSpeed = 1;
-	
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -111,7 +111,9 @@ public class BaseTurretHead : MonoBehaviour
 	{
 		//spawn bullet
 		GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Bullet", true, transform.position, transform.rotation);
-		obj.GetComponent<BaseBullet>().TargetPositon = Target.transform.position;
+		obj.transform.Rotate(90.0f, .0f, .0f);
+		obj.GetComponent<BaseBullet>().FlightVector = Target.transform.position;
+		obj.GetComponent<BaseBullet>().Parent = gameObject.transform.parent.gameObject;
 	}
 }
 
