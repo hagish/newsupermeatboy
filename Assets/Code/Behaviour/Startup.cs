@@ -29,7 +29,7 @@ public class Startup : MonoBehaviour {
 			Application.LoadLevel(3);
 		}
 		
-		if (GUI.Button(new Rect(75, 25, 300, 25), "Player One: " + InputConfig.P1InputType))
+		if (GUI.Button(new Rect(Screen.width - 310, Screen.height - 70, 300, 25), "Player One: " + InputConfig.P1InputType))
 		{
 			switch (InputConfig.P1InputType)
 			{
@@ -40,7 +40,7 @@ public class Startup : MonoBehaviour {
 			}
 		}
 		
-		if (GUI.Button(new Rect(75, 75, 300, 25), "Player Two: " + InputConfig.P2InputType))
+		if (GUI.Button(new Rect(Screen.width - 310, Screen.height - 40, 300, 25), "Player Two: " + InputConfig.P2InputType))
 		{
 			switch (InputConfig.P2InputType)
 			{
