@@ -31,11 +31,14 @@ public class BaseBullet : MonoBehaviour
 		}
 	}
 	
-	void OnCollisionEnter(Collision collision)
+	void OnCollisionEnter(Collision otherObject)
 	{
-		
-		if( collision.gameObject is Player)
-			Debug.Log("Hit");
+		Debug.Log("OnCollisionEnter Bullet");
+		if(otherObject.gameObject is Player)
+		{
+			Debug.Log("Player has been hit");
+			DestroyImmediate(gameObject);
+		}
 	}
 
 	
