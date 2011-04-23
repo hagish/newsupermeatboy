@@ -355,9 +355,11 @@ float	ChangeValueWithSpeed	(float old,float target,float change_speed) {
 		bSlidingLeft = false;
 		bSlidingRight = false;
 		MyMoveInit();
-		//float oldz = controller.transform.z;
+		float oldz = controller.transform.position.z;
 		controller.Move(moveSpeed * Time.deltaTime);
-		//controller.transform.z = oldz;
+		Vector3 pos = controller.transform.position;
+		pos.z = oldz;
+		controller.transform.position = pos;
 		
 		if (bTouchesWallLeft) bSlidingLeft = true;
 		if (bTouchesWallRight) bSlidingRight = true;
