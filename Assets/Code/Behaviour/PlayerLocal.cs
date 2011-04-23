@@ -86,6 +86,9 @@ public class PlayerLocal : MonoBehaviour {
 		if (v.normalized.y >= -0.5) return;
 		otherplayer.Die();
 	
+				bDirKeyPressedSinceJump = false;
+				moveSpeed.y = myJumpSpeed;
+				time_since_jump = 0f;
 		/*
 		// jump and bump killing (jump on head)
 		otherplayer = hit.gameObject.GetComponent<PlayerLocal>();
@@ -355,9 +358,11 @@ float	ChangeValueWithSpeed	(float old,float target,float change_speed) {
 		bSlidingLeft = false;
 		bSlidingRight = false;
 		MyMoveInit();
-		//float oldz = controller.transform.z;
+		float oldz = controller.transform.position.z;
 		controller.Move(moveSpeed * Time.deltaTime);
-		//controller.transform.z = oldz;
+		Vector3 pos = controller.transform.position;
+		pos.z = oldz;
+		controller.transform.position = pos;
 		
 		if (bTouchesWallLeft) bSlidingLeft = true;
 		if (bTouchesWallRight) bSlidingRight = true;
