@@ -64,6 +64,34 @@ public class PlayerLocal : MonoBehaviour {
 	public static float time_since_jump_airmove_slower = 0.1f; // airmove ineffective shortly after jump
 
 
+	static void SpawnBloodOnContact (ControllerColliderHit hit) {
+		Vector3 hit_moveDirection = hit.moveDirection;
+		Vector3 hit_point = hit.point;
+		Vector3 hit_normal = hit.normal;
+	
+		float dx = hit_moveDirection.x;
+		float dy = hit_moveDirection.y;
+		float fMinOrtho = 0.8f;
+		
+		
+		// if (Mathf.Abs(dx) > fMinOrtho || Mathf.Abs(dy) > fMinOrtho) {
+			// TODO : network ? GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Sphere", true, transform.position+hit.moveDirection, transform.rotation);
+			var res = Resources.Load("BloodBall");
+			if (res) {
+				GameObject g = (GameObject)GameObject.Instantiate(res);
+				
+				g.transform.position = hit_point;
+				Vector3 forward = hit_normal;
+				Vector3 up = Vector3.Cross(forward,Vector3.forward);
+				g.transform.rotation = Quaternion.LookRotation(forward,up);
+				
+				// p.AddComponent<MeshFilter>();
+				// p.AddComponent<MeshRenderer>();
+				// g.transform.rotation = transform.rotation;
+				// g.transform.parent = transform;
+			}
+		// }
+	}
 
 	public void	MyMoveInit	() {
 		bTouchesWall = false;
@@ -96,30 +124,8 @@ public class PlayerLocal : MonoBehaviour {
 		// blood test 2
 		if (Time.time > nextbloodt) {
 			nextbloodt = Time.time + fBloodInterval;
-			float dx = hit.moveDirection.x;
-			float dy = hit.moveDirection.y;
-			float fMinOrtho = 0.8f;
-			if (Mathf.Abs(dx) > fMinOrtho || Mathf.Abs(dy) > fMinOrtho) {
-				//GameObject obj = GameObjectHelper.createObject(Game.game.gameObject, "Sphere", true, transform.position+hit.moveDirection, transform.rotation);
-				//obj.renderer.material.color = Color.red;
-				//GameObject p = new GameObject("WallBlood");
-				var res = Resources.Load("BloodBall");
-				if (res) {
-					GameObject g = (GameObject)GameObject.Instantiate(res);
-					// p.AddComponent<MeshFilter>();
-					// p.AddComponent<MeshRenderer>();
-					
-					g.transform.position = hit.point;
-					Vector3 forward = hit.normal;
-					Vector3 up = Vector3.Cross(forward,Vector3.forward);
-					// g.transform.rotation = transform.rotation;
-					g.transform.rotation = Quaternion.LookRotation(forward,up);
-					
-					// g.transform.parent = transform;
-					
-					// Debug.Log(p.transform.position);
-				}
-			}
+			SpawnBloodOnContact(hit);
+			
 		}
 	}
 	
