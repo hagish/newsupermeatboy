@@ -4,7 +4,7 @@ using System.Collections;
 public class BaseBullet : MonoBehaviour
 {
 	//a bullet has a speed
-	private float _flightSpeed = 2.0f;
+	private float _flightSpeed = 4.0f;
 	
 	//Target
 	public Vector3 TargetPositon;
@@ -22,40 +22,41 @@ public class BaseBullet : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		//Check if a player has been hit
-		if(CollisionCheck() == false)
-			Fly();
-		else
-		{
-			
-		}
+		Fly();
 	}
 	
 	void OnCollisionEnter(Collision otherObject)
 	{
-		Debug.Log("OnCollisionEnter Bullet");
-		if(otherObject.gameObject.GetType() == typeof(Player))
+	    /*var value = otherObject.gameObject.GetComponent<Player>();
+		
+		if(value != null)
 		{
-			Debug.Log("Player has been hit");
-			DestroyImmediate(gameObject);
+			value.gameObject.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
+		}
+		
+		if(otherObject.gameObject.GetComponent<BaseBullet>() == null)
+		{
+		}*/
+	}
+	
+	void OnTriggerEnter(Collider otherObject)
+	{
+		var value = otherObject.gameObject.GetComponent<Player>();
+		
+		if(value != null)
+		{
+			value.gameObject.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
+			Destroy(gameObject);
 		}
 	}
 
-	
-	private bool CollisionCheck()
-	{
-		
-		
-		return false;
-	}
-	
 	private void Fly()
 	{
 		float distance = Time.deltaTime * _flightSpeed;
 		_flown += distance;
 		if( _flown >= _flightDistance)
 		{
-			Destroy(gameObject, 2.0f);
+			Destroy(gameObject);
 		}
 		else
 		{

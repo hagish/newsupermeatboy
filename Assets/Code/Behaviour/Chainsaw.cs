@@ -27,6 +27,6 @@ public class Chainsaw : MonoBehaviour {
 	}
 	
 	void OnTriggerEnter(Collider other) {
-		other.SendMessage("Die");
+		other.gameObject.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
 	}
 }

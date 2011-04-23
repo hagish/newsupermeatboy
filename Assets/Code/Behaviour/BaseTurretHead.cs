@@ -21,14 +21,11 @@ public class BaseTurretHead : MonoBehaviour
 	public Rigidbody Bullet;
 	
 	//the turret fires all 'value' seconds a bullet
-	public int AttackSpeed = 5;
-	
-	private Vector3 _spawnPoint;
+	public int AttackSpeed = 1;
 	
 	// Use this for initialization
 	void Start ()
 	{
-		_spawnPoint = transform.position + (transform.localScale * 0.5f);
 	}
 
 	// Update is called once per frame
