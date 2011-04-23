@@ -112,8 +112,6 @@ public class BaseTurretHead : MonoBehaviour
 			TimeTillNextShot -= Time.deltaTime;
 			return false;
 		}
-		
-		return false;
 	}
 	
 	private void Fire()
