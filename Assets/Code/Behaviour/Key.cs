@@ -9,6 +9,12 @@ public class Key : MonoBehaviour {
 	private Vector3 startPos;
 	private Vector3 endPos;
 	
+	private bool isNetworkStub = false;
+
+	void OnNetworkInstantiate(NetworkMessageInfo info) {
+		isNetworkStub = true;
+	}
+	
 	// Use this for initialization
 	void Start () {
 		
@@ -20,6 +26,7 @@ public class Key : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (isNetworkStub)return;
 
 		// Check if deltaPos has values and then apply interpolation
         if (UseAnimation)
@@ -31,10 +38,18 @@ public class Key : MonoBehaviour {
 		}
 	}
 	
-	void OnTriggerEnter(Collider other) 
+	void OnTriggerEnter(Collider other)
 	{
 		other.SendMessage("KeyGot", SendMessageOptions.DontRequireReceiver);
 		this.renderer.enabled = false;
+		
+		GameObjectHelper.visitComponentsInDirectChildren<Door>(Game.game.gameObject, (door) => {
+			if (door.key == gameObject)
+			{
+				GameObject.Destroy(door.gameObject);	
+			}
+		});
+
 		GameObject.Destroy(this);
 	}
 }

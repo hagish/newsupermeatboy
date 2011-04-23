@@ -25,6 +25,12 @@ public class BaseTurretHead : MonoBehaviour
 	
 	private Vector3 _spawnPoint;
 	
+	private bool isNetworkStub = false;
+
+	void OnNetworkInstantiate(NetworkMessageInfo info) {
+		isNetworkStub = true;
+	}
+	
 	// Use this for initialization
 	void Start ()
 	{
@@ -34,6 +40,8 @@ public class BaseTurretHead : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		if (isNetworkStub)return;
+		
 		//RotateHead();
 		if(Target == null)
 			CheckForPlayersInRange();

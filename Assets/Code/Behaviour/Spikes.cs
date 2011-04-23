@@ -10,6 +10,12 @@ public class Spikes : MonoBehaviour {
 	private Vector3 startPos;
 	private Vector3 endPos;
 	
+	private bool isNetworkStub = false;
+
+	void OnNetworkInstantiate(NetworkMessageInfo info) {
+		isNetworkStub = true;
+	}
+	
 	// Use this for initialization
 	void Start () {
 		
@@ -21,7 +27,8 @@ public class Spikes : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		if (isNetworkStub)return;
+		
 		// Check if deltaPos has values and then apply interpolation
         if (UseAnimation)
 			transform.position = Vector3.Lerp(startPos, endPos, Mathf.PingPong(Time.time * speed, 1));
