@@ -17,7 +17,8 @@ public class Game : MonoBehaviour {
 	void Start () {
 		game = this;
 		
-		createLocalPlayer(1, "left", "right", "space");
+		// keynames see http://unity3d.com/support/documentation/Manual/Input.html
+		createLocalPlayer(1, "left", "right", "right shift");
 		createLocalPlayer(2, "a", "d", "w");
 	}
 	
