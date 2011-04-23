@@ -65,9 +65,10 @@ public class PlayerLocal : MonoBehaviour {
 	float time_since_jump = 0f;
 	public static float time_since_jump_airmove_slower = 0.1f; // airmove ineffective shortly after jump
 	
+	// keynames see http://unity3d.com/support/documentation/Manual/Input.html
 	public string keyLeft = "left";
 	public string keyRight = "right";
-	public string keyJump = "space";
+	public string keyJump = "right shift";
 	
 	public void setKeyBindings(string left, string right, string jump)
 	{
