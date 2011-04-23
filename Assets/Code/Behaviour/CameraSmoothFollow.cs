@@ -55,7 +55,7 @@ public class CameraSmoothFollow : MonoBehaviour {
 			pos += player2.transform.position;
 			pos *= 0.5f;
 			
-			z = -10 - (player1.transform.position - player2.transform.position).magnitude * 0.5f;
+			z = -10 - (player1.transform.position - player2.transform.position).magnitude ;
 		}
 		
 		float f = 0.04f;
