@@ -22,6 +22,7 @@ public class BaseTurretHead : MonoBehaviour
 	
 	//the turret fires all 'value' seconds a bullet
 	public int AttackSpeed = 1;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -30,6 +31,12 @@ public class BaseTurretHead : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+<<<<<<< HEAD
+=======
+		if (!NetworkHelper.instance.isServer())return;
+		
+		//RotateHead();
+>>>>>>> ee6687e681ce029b6290b55d158fa143e314d1fe
 		if(Target == null)
 			CheckForPlayersInRange();
 		else
