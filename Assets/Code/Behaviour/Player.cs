@@ -80,8 +80,23 @@ public class Player : MonoBehaviour {
 		}
 	}
 	
+	void SpawnGibs ()
+	{
+		var res = Resources.Load("MeatBall");
+		if (res) for (int i=0;i<10;++i) {
+			GameObject g = (GameObject)GameObject.Instantiate(res);
+			Vector3 vel = Random.insideUnitSphere * 1f;
+			Vector3 off = Random.onUnitSphere * 0.3f;
+			vel.z *= 0.2f;
+			off.z *= 0.2f;
+			g.rigidbody.velocity = vel;
+			g.rigidbody.position = transform.position + off;
+		}
+	}
+	
 	void Die ()
 	{
+		SpawnGibs();
 		Respawn();
 	}
 }
