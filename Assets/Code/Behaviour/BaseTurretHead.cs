@@ -19,14 +19,14 @@ public class BaseTurretHead : MonoBehaviour
 	}
 	
 	//the turret fires all 'value' seconds a bullet
-	private int AttackSpeed = 3;
+	public int AttackSpeed = 5;
 	
-	
+	private Vector3 _spawnPoint;
 	
 	// Use this for initialization
 	void Start ()
 	{
-		
+		_spawnPoint = transform.position + (transform.localScale * 0.5f);
 	}
 
 	// Update is called once per frame
@@ -39,7 +39,7 @@ public class BaseTurretHead : MonoBehaviour
 		{
 			if(IsPlayerStillInRange())
 			{
-				Debug.Log("True");
+				
 			}
 			else
 			{
@@ -92,16 +92,12 @@ public class BaseTurretHead : MonoBehaviour
 	
 	private void RotateHead()
 	{
-		//i need current position of the target, and my own position
-		//next i have to calculate the 
 		transform.LookAt(Target.transform.position);
-		//transform.Rotate(90.0f, 0.0f, 0.0f);
-		//transform.Rotate(0.0f, 0.0f, 2.0f);
+		
 	}
 	
 	private bool ReadyToFire()
 	{
-		
 		if( TimeTillNextShot < 0.0f )
 		{
 			TimeTillNextShot = AttackSpeed;
@@ -112,13 +108,21 @@ public class BaseTurretHead : MonoBehaviour
 			TimeTillNextShot -= Time.deltaTime;
 			return false;
 		}
-		
-		return false;
 	}
 	
 	private void Fire()
 	{
 		//spawn bullet
+		GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+		
+		obj.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+		obj.transform.rotation = transform.rotation;
+		obj.transform.Rotate(90.0f, 0.0f, 0.0f);
+		obj.transform.localScale = new Vector3(0.25f,0.25f,0.25f);
+		BaseBullet bullet = obj.AddComponent<BaseBullet>();
+		bullet.TargetPositon = Target.transform.position;
+		
+		
 	}
 }
 
