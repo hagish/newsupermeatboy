@@ -36,7 +36,8 @@ public class BaseBullet : MonoBehaviour
 	
 	void OnTriggerEnter(Collider otherObject)
 	{
-		if(otherObject.transform.parent.gameObject != Parent)
+		if(otherObject != null && otherObject.transform.parent != null && 
+		   	otherObject.transform.parent.gameObject != Parent)
 		{
 			var value = otherObject.gameObject.GetComponent<Player>();
 			if(value != null)

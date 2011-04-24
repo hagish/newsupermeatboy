@@ -29,6 +29,11 @@ public class Startup : MonoBehaviour {
 			Application.LoadLevel(3);
 		}
 		
+		if(GUI.Button(new Rect(25,290,200,25), "Level 4"))
+		{
+			Application.LoadLevel(4);
+		}
+		
 		if (GUI.Button(new Rect(Screen.width - 310, Screen.height - 70, 300, 25), "Player One: " + InputConfig.P1InputType))
 		{
 			switch (InputConfig.P1InputType)
